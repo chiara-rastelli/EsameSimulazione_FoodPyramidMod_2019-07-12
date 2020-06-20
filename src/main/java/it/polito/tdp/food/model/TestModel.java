@@ -6,6 +6,9 @@ public class TestModel {
 		// TODO Auto-generated method stub
 
 		Model m = new Model();
+		
+		for (Food f : m.getFoodByNumberOfCondiments(6))
+			System.out.println(f.toString());
 	}
 
 }

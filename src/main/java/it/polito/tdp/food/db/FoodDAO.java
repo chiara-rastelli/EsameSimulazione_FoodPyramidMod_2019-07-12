@@ -6,12 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import it.polito.tdp.food.model.Condiment;
 import it.polito.tdp.food.model.Food;
 import it.polito.tdp.food.model.Portion;
 
 public class FoodDAO {
+	
 	public List<Food> listAllFoods(){
 		String sql = "SELECT * FROM food" ;
 		try {
@@ -40,7 +42,36 @@ public class FoodDAO {
 			e.printStackTrace();
 			return null ;
 		}
+	}
+	
+	public List<Food> listAllFoodsByNumberOfCondiments(int n, Map<Integer, Food> foodIdMap){
+		String sql = "	SELECT COUNT(*) AS numero_condimenti, food_code FROM food_condiment " + 
+					 "	GROUP BY food_code HAVING numero_condimenti = ?" ;
+		try {
+			Connection conn = DBConnect.getConnection() ;
 
+			PreparedStatement st = conn.prepareStatement(sql) ;
+			st.setInt(1, n);
+			List<Food> list = new ArrayList<>() ;
+			
+			ResultSet res = st.executeQuery() ;
+			
+			while(res.next()) {
+				try {
+					Food fTemp = foodIdMap.get(res.getInt("food_code"));
+					list.add(fTemp);
+				} catch (Throwable t) {
+					t.printStackTrace();
+				}
+			}
+			
+			conn.close();
+			return list ;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null ;
+		}
 	}
 	
 	public List<Condiment> listAllCondiments(){
