@@ -4,10 +4,31 @@ public class Food {
 	private Integer food_code;
 	private String display_name;
 	
+	private Boolean inPreparazione;
+	private Boolean giaPreparato;
+	
 	public Food(Integer food_code, String display_name) {
 		super();
 		this.food_code = food_code;
 		this.display_name = display_name;
+		this.giaPreparato = false;
+		this.inPreparazione = false;
+	}
+	
+	public Boolean getGiaPreparato() {
+		return giaPreparato;
+	}
+
+	public void setGiaPreparato(Boolean giaPreparato) {
+		this.giaPreparato = giaPreparato;
+	}
+	
+	public Boolean getInPreparazione() {
+		return inPreparazione;
+	}
+
+	public void setInPreparazione(Boolean inPreparazione) {
+		this.inPreparazione = inPreparazione;
 	}
 	
 	public Integer getFood_code() {

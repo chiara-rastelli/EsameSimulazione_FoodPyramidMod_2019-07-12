@@ -98,7 +98,23 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	if (this.model.getStatoGrafo() == false) {
+    		this.txtResult.setText("Devi prima creare un grafo ai punti precedenti!\n");
+    		return;
+    	}
+    	int numeroPostazioni = 0;
+    	try {
+    		numeroPostazioni = Integer.parseInt(this.txtK.getText());
+    	}catch(NumberFormatException e) {
+    		this.txtResult.appendText("Devi inserire un numero di postazioni per la simulazione intero!\n");
+    		return;
+    	}
+    	if (numeroPostazioni > 10 || numeroPostazioni < 1) {
+    		this.txtResult.appendText("Il numero di postazioni per la simulazione deve essere compreso tra 1 e 10, estremi inclusi!\n");
+    		return;
+    	}
+    	this.model.Simula(numeroPostazioni, this.boxFood.getValue());
     }
 
     @FXML

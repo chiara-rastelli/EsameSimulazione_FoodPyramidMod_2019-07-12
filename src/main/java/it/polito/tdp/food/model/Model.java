@@ -1,5 +1,6 @@
 package it.polito.tdp.food.model;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +20,21 @@ public class Model {
 	Map<Integer, Food> foodRistrettiIdMap;
 	SimpleWeightedGraph<Food, DefaultWeightedEdge> graph;
 	boolean grafoCreato;
+	
+	Simulator s;
+	List<Food> cibiPreparati;
+	Duration tempoSimulazione;
+	
+	public void Simula(int n, Food f) {
+		this.s = new Simulator(n, this.graph, f);
+		this.cibiPreparati = new ArrayList<Food>(s.preparati);
+		this.tempoSimulazione = s.ultimoTempo;
+		
+		for (Food preparato : this.cibiPreparati)
+			System.out.println(preparato.toString()+"\n");
+		System.out.println("Tempo impiegato in minuti: "+this.tempoSimulazione.toMinutes()+"\n");
+		
+	}
 	
 	public boolean getStatoGrafo() {
 		return this.grafoCreato;
