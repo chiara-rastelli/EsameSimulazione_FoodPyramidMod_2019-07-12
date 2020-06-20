@@ -1,9 +1,12 @@
 package it.polito.tdp.food;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.food.model.Food;
 import it.polito.tdp.food.model.Model;
+import it.polito.tdp.food.model.Vicino;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,19 +42,58 @@ public class FXMLController {
     private Button btnSimula;
 
     @FXML
-    private ComboBox<?> boxFood;
+    private ComboBox<Food> boxFood;
 
     @FXML
     private TextArea txtResult;
 
     @FXML
     void doCalorie(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	if (this.model.getStatoGrafo() == false) {
+    		this.txtResult.setText("Prima devi creare il grafo selezionando un numero di porzioni!\n");
+    		return;
+    	}
+    	if (this.boxFood.getValue() == null) {
+    		this.txtResult.setText("Devi prima selezionare dal menu' a tendina un cibo!\n");
+    		return;
+    	}
+    	List<Vicino> listaVicini = this.model.getCalorieMassimeAdiacenza(this.boxFood.getValue());
+    	if (listaVicini.size() == 0) {
+    		this.txtResult.setText("Mi dispiace, nel grafo creato il cibo selezionato non ha vicini!\n");
+    		return;
+    	}
+    	this.txtResult.setText("Ecco i cinque cibi vicini a quello selezionato nel grafo con il massimo valore di calorie congiunte con esso:\n");
+    	if (listaVicini.size() < 5) {
+    		int i = 1;
+    		for (Vicino v : listaVicini) {
+    			this.txtResult.appendText("Cibo vicino numero "+i+": "+v.getVicino()+"; media calorie congiunte: "+v.getPeso()+"\n");
+    			i++;
+    		}
+    		return;
+    	}
+    	for (int i = 0; i < 5; i++) {
+    			this.txtResult.appendText("Cibo vicino numero "+(i+1)+": "+listaVicini.get(i).getVicino()+"; media calorie congiunte: "+listaVicini.get(i).getPeso()+"\n");
+    	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	this.txtResult.clear();
+    	int numeroPorzioni = 0;
+    	try {
+    		numeroPorzioni = Integer.parseInt(this.txtPorzioni.getText());
+    		if (numeroPorzioni < 0) {
+    			this.txtResult.setText("Il numero di porzioni deve essere maggiore di zero!\n");
+    			return;
+    		}
+    		
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Devi inserire un valore intero per il numero di porzioni!\n");
+    		return;
+    	}
+    	this.model.creaGrafo(numeroPorzioni);
+    	this.boxFood.getItems().addAll(this.model.getFoodByNumberOfCondiments(numeroPorzioni));
     }
 
     @FXML
